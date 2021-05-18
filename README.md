@@ -1,6 +1,6 @@
 # LoadingView
 
-This is a simple loading view built in swift that can be added and removed from a UIViewController.
+This is a simple loading view built in swift that can be added and removed from a UIViewController to indicate when loading is occuring.
 
 ## Usage
 To add the `LoadingView`, the view first needs to be added as a class property
