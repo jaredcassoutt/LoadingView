@@ -1,24 +1,32 @@
+//
 //  LoadingView.swift
+//  Styvio
+//
 //  Created by Jared Cassoutt on 5/12/21.
+//
 
 import UIKit
 
 class LoadingView: UIView {
     
-    let circleLayer = CAShapeLayer()
+//MARK: - Properties and Init
     
+    let circleLayer = CAShapeLayer()
     private var circlePath : UIBezierPath = .init()
-    let size : CGFloat = 75
+    let size : CGFloat = 80
     
     init() {
         super.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
         layer.cornerRadius = size/8
         addShadow(shadowColor: UIColor.label.cgColor, shadowOffset: CGSize(width: 0, height: 0), shadowOpacity: 0.3, shadowRadius: 3)
+        tag = 100
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+//MARK: - Public Methods startLoading() and stopLoading()
     
     func startLoading() {
         if let topView = UIApplication.topViewController()?.view {
@@ -38,7 +46,15 @@ class LoadingView: UIView {
         }
     }
     
-    func calculateCirclePath() {
+    func stopLoading() {
+        if let viewWithTag = superview?.viewWithTag(100) {
+            viewWithTag.removeFromSuperview()
+        }
+    }
+    
+//MARK: - Private UI Setup Methods
+    
+    private func calculateCirclePath() {
         self.circlePath = UIBezierPath(arcCenter: CGPoint(x: size / 2, y: size / 2), radius: size / 3, startAngle: 0.0, endAngle: CGFloat(Double.pi*2), clockwise: true)
     }
     
@@ -83,9 +99,5 @@ class LoadingView: UIView {
         fadeAnimation.duration = duration
         fadeAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeIn)
         circleLayer.add(fadeAnimation, forKey: nil)
-    }
-    
-    func stopLoading() {
-        self.removeFromSuperview()
     }
 }
