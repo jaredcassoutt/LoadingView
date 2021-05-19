@@ -1,3 +1,6 @@
+//  LoadingView.swift
+//  Created by Jared Cassoutt on 5/12/21.
+
 import UIKit
 
 class LoadingView: UIView {
@@ -8,7 +11,9 @@ class LoadingView: UIView {
     let size : CGFloat = 75
     
     init() {
-        super.init(frame: .zero)
+        super.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
+        layer.cornerRadius = size/8
+        addShadow(shadowColor: UIColor.label.cgColor, shadowOffset: CGSize(width: 0, height: 0), shadowOpacity: 0.3, shadowRadius: 3)
     }
     
     required init?(coder: NSCoder) {
@@ -25,7 +30,6 @@ class LoadingView: UIView {
                 self.widthAnchor.constraint(equalToConstant: CGFloat(size)),
                 self.heightAnchor.constraint(equalToConstant: CGFloat(size)),
             ])
-            layer.cornerRadius = frame.height
             addShadow(shadowColor: UIColor.label.cgColor, shadowOffset: CGSize(width: 0, height: 0), shadowOpacity: 0.3, shadowRadius: 3)
             backgroundColor = .secondarySystemBackground
             self.layer.addSublayer(circleLayer)
