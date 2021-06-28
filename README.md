@@ -3,10 +3,7 @@
 This is a simple loading view built in swift that can be added and removed from a UIViewController to indicate when loading is occuring.
 
 ## Usage
-To add the view to a UIViewController and start the animation, the `startLoading()` method should be called.
-
-> LoadingView().startLoading()
-
-When you want the view to disappear, the `stopLoading()` method can be called
-
-> loadingView.stopLoading()
+1. To add the ```LoadingView```, first the ```UIView``` or ```UIViewController``` should inherit from the ```LoadingViewProtocol```
+2. Then, as suggested by Xcode the required stubs should be added to the view controller:
+> let loadingView: LoadingView = LoadingView()
+3. Finally, you can access the functionality ```startLoading()``` and ```stopLoading()```
