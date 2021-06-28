@@ -7,6 +7,49 @@
 
 import UIKit
 
+protocol LoadingViewProtocol {
+    var loadingView: LoadingView {get set}
+}
+
+extension LoadingViewProtocol where Self: UIView {
+    func startLoading() {
+            addSubview(loadingView)
+            loadingView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                loadingView.centerYAnchor.constraint(equalTo: centerYAnchor),
+                loadingView.centerXAnchor.constraint(equalTo: centerXAnchor),
+                loadingView.widthAnchor.constraint(equalToConstant: CGFloat(80)),
+                loadingView.heightAnchor.constraint(equalToConstant: CGFloat(80)),
+            ])
+        loadingView.isHidden = false
+        loadingView.animateCircle(duration: 1, repeats: true)
+    }
+    
+    func stopLoading() {
+        loadingView.isHidden = true
+    }
+}
+
+extension LoadingViewProtocol where Self: UIViewController {
+    func startLoading() {
+            view.addSubview(loadingView)
+            loadingView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                loadingView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                loadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                loadingView.widthAnchor.constraint(equalToConstant: CGFloat(80)),
+                loadingView.heightAnchor.constraint(equalToConstant: CGFloat(80)),
+            ])
+        loadingView.isHidden = false
+        loadingView.animateCircle(duration: 1, repeats: true)
+    }
+    
+    func stopLoading() {
+        loadingView.isHidden = true
+    }
+}
+
+
 class LoadingView: UIView {
     
 //MARK: - Properties and Init
@@ -17,39 +60,26 @@ class LoadingView: UIView {
     
     init() {
         super.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
-        layer.cornerRadius = size/8
-        addShadow(shadowColor: UIColor.label.cgColor, shadowOffset: CGSize(width: 0, height: 0), shadowOpacity: 0.3, shadowRadius: 3)
         tag = 100
+        addShadow(shadowColor: UIColor.label.cgColor, shadowOffset: CGSize(width: 0, height: 0), shadowOpacity: 0.3, shadowRadius: 3)
+        backgroundColor = .secondarySystemBackground
+        layer.cornerRadius = size/8
+        self.layer.addSublayer(circleLayer)
+        calculateCirclePath()
+        circleLayer.path = circlePath.cgPath
+        circleLayer.fillColor = UIColor.clear.cgColor
+        circleLayer.strokeColor = UIColor.blue.cgColor
+        circleLayer.lineWidth = 5.0
+        
+        // Don't draw the circle initially
+        circleLayer.strokeEnd = 0.0
+        
+        // Add the circleLayer to the view's layer's sublayers
+        self.layer.addSublayer(circleLayer)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-//MARK: - Public Methods startLoading() and stopLoading()
-    
-    func startLoading() {
-        if let topView = UIApplication.topViewController()?.view {
-            topView.addSubview(self)
-            translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                self.centerYAnchor.constraint(equalTo: topView.centerYAnchor),
-                self.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
-                self.widthAnchor.constraint(equalToConstant: CGFloat(size)),
-                self.heightAnchor.constraint(equalToConstant: CGFloat(size)),
-            ])
-            addShadow(shadowColor: UIColor.label.cgColor, shadowOffset: CGSize(width: 0, height: 0), shadowOpacity: 0.3, shadowRadius: 3)
-            backgroundColor = .secondarySystemBackground
-            self.layer.addSublayer(circleLayer)
-            calculateCirclePath()
-            animateCircle(duration: 1, repeats: true)
-        }
-    }
-    
-    func stopLoading() {
-        if let viewWithTag = superview?.viewWithTag(100) {
-            viewWithTag.removeFromSuperview()
-        }
     }
     
 //MARK: - Private UI Setup Methods
@@ -62,18 +92,8 @@ class LoadingView: UIView {
         circleLayer.frame = self.layer.bounds
     }
     
-    private func animateCircle(duration: TimeInterval, repeats: Bool) {
+    func animateCircle(duration: TimeInterval, repeats: Bool) {
         // Setup the CAShapeLayer with the path, colors, and line width
-        circleLayer.path = circlePath.cgPath
-        circleLayer.fillColor = UIColor.clear.cgColor
-        circleLayer.strokeColor = UIColor.blue.cgColor
-        circleLayer.lineWidth = 5.0
-        
-        // Don't draw the circle initially
-        circleLayer.strokeEnd = 0.0
-        
-        // Add the circleLayer to the view's layer's sublayers
-        self.layer.addSublayer(circleLayer)
         // We want to animate the strokeEnd property of the circleLayer
         let animation = CABasicAnimation(keyPath: "strokeEnd")
         animation.duration = duration
@@ -101,3 +121,4 @@ class LoadingView: UIView {
         circleLayer.add(fadeAnimation, forKey: nil)
     }
 }
+
