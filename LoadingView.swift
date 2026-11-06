@@ -61,7 +61,10 @@ class LoadingView: UIView {
     init() {
         super.init(frame: CGRect(x: 0, y: 0, width: size, height: size))
         tag = 100
-        addShadow(shadowColor: UIColor.label.cgColor, shadowOffset: CGSize(width: 0, height: 0), shadowOpacity: 0.3, shadowRadius: 3)
+        layer.shadowColor = UIColor.label.cgColor
+        layer.shadowOffset = CGSize(width: 0, height: 0)
+        layer.shadowOpacity = 0.3
+        layer.shadowRadius = 3
         backgroundColor = .secondarySystemBackground
         layer.cornerRadius = size/8
         self.layer.addSublayer(circleLayer)
